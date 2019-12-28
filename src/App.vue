@@ -18,12 +18,7 @@
             </div>
             <!-- pattern -->
             <div class="input-group col-6">
-              <input
-                type="text"
-                class="form-control"
-                v-model="pattern"
-                placeholder="type your pattern"
-              />
+              <input type="text" class="form-control" v-model="pattern" placeholder="type your pattern" />
               <div class="input-group-append">
                 <button class="input-group-text" @click="textMatch">Search</button>
               </div>
@@ -34,8 +29,9 @@
           <div class="row">
             <!-- result -->
             <div class="col-8 d-flex">
-              <div ref="regexp-result" class="regexp-result border shadow-sm w-100">
+              <div ref="regexp-result" class="regexp-result border shadow-sm w-100 p-3 position-relative">
                 {{ result }}
+                <i class="far fa-times-circle position-absolute" @click="clearResult"></i>
               </div>
             </div>
             <!-- replace -->
@@ -43,12 +39,9 @@
               <div class="card h-100">
                 <h6 class="card-header text-center">Replace</h6>
 
-                <div
-                  class="card-body d-flex flex-column align-items-center justify-content-between"
-                >
-                  <input type="text" class="form-control mb-1" placeholder="from" />
-                  <input type="text" class="form-control mb-1" placeholder="to" />
-                  <button class="btn btn-secondary">Replace</button>
+                <div class="card-body d-flex flex-column align-items-center justify-content-between">
+                  <input type="text" class="form-control mb-1" v-model="replaceTo" placeholder="replace to" />
+                  <button class="btn btn-secondary" @click="textReplace">Replace</button>
                 </div>
               </div>
             </div>
@@ -57,22 +50,18 @@
             <div class="col-2 form-group mb-0">
               <div class="card h-100">
                 <h6 class="card-header text-center">Select flags</h6>
-
+                <!--  -->
                 <div class="card-body d-flex justify-content-center">
                   <div>
-                    <div
-                      class="custom-control custom-switch"
-                      v-for="(flagName, i) in flagNames"
-                      :key="i"
-                    >
+                    <div class="custom-control custom-switch" v-for="(item, i) in flags" :key="i">
                       <input
                         type="checkbox"
                         class="custom-control-input"
-                        :id="`${flagName}-flag`"
-                        @input="switchFlag($event, flagName)"
+                        :id="`${i}-flag`"
+                        @input="switchFlag($event, i)"
                       />
-                      <label class="custom-control-label" :for="`${flagName}-flag`">
-                        {{ `${flagName}-flag` }}
+                      <label class="custom-control-label" :for="`${i}-flag`">
+                        {{ `${i}-flag` }}
                       </label>
                     </div>
                   </div>
@@ -101,15 +90,8 @@ export default {
   data() {
     return {
       pattern: "",
-      flagNames: ["g", "i", "m", "u", "s", "y"],
-      flags: {
-        g: '',
-        i: '',
-        m: '',
-        u: '',
-        s: '',
-        y: ''
-      },
+      flags: { g: "", i: "", m: "", u: "", s: "", y: "" },
+      replaceTo: "",
       result: undefined
     };
   },
@@ -117,23 +99,27 @@ export default {
     textMatch() {
       this.result = this.text.match(this.regexp);
     },
+    textReplace() {
+      this.result = this.text.replace(this.regexp, this.replaceTo);
+    },
     switchFlag(e, val) {
       e.target.checked ? (this.flags[val] = val) : (this.flags[val] = "");
     },
-    createRegExp() {}
+    clearResult() {
+      this.result = "";
+    }
   },
   computed: {
     text() {
       return this.$store.getters.text;
     },
-    regexp() {      
+    regexp() {
       const flags = `${this.flags.g}${this.flags.i}${this.flags.m}${this.flags.u}${this.flags.s}${this.flags.y}`;
       return new RegExp(this.pattern, flags);
     }
   },
   mounted() {
-    this.$refs["regexp-result"].style.height =
-      this.$refs["regexp-result"].getBoundingClientRect().height + "px";
+    this.$refs["regexp-result"].style.height = this.$refs["regexp-result"].getBoundingClientRect().height + "px";
   },
   components: {
     componentText
@@ -159,5 +145,18 @@ export default {
 }
 .regexp-result {
   overflow-y: auto;
+}
+
+.fa-times-circle {
+  right: 10px;
+  top: 10px;
+  font-size: 22px;
+  opacity: 0.5;
+  cursor: pointer;
+  transition: opacity 300ms, transform 300ms;
+}
+.fa-times-circle:hover {
+  transform: scale(1.1);
+  opacity: 1;
 }
 </style>
