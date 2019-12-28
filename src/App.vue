@@ -25,39 +25,56 @@
                 placeholder="type your pattern"
               />
               <div class="input-group-append">
-                <button class="input-group-text" @click="showResult">Search</button>
+                <button class="input-group-text" @click="textMatch">Search</button>
               </div>
             </div>
           </div>
 
           <!-- menu-body -->
           <div class="row">
-            <!--  -->
-            <div class="col-10 d-flex">
+            <!-- result -->
+            <div class="col-8 d-flex">
               <div ref="regexp-result" class="regexp-result border shadow-sm w-100">
-                {{result}}
+                {{ result }}
               </div>
             </div>
+            <!-- replace -->
+            <div class="col-2 form-group mb-0">
+              <div class="card h-100">
+                <h6 class="card-header text-center">Replace</h6>
+
+                <div
+                  class="card-body d-flex flex-column align-items-center justify-content-between"
+                >
+                  <input type="text" class="form-control mb-1" placeholder="from" />
+                  <input type="text" class="form-control mb-1" placeholder="to" />
+                  <button class="btn btn-secondary">Replace</button>
+                </div>
+              </div>
+            </div>
+
             <!-- flags -->
             <div class="col-2 form-group mb-0">
-              <div class="card">
-                <h6 class="card-header">Select flags</h6>
+              <div class="card h-100">
+                <h6 class="card-header text-center">Select flags</h6>
 
-                <div class="card-body">
-                  <div
-                    class="custom-control custom-switch"
-                    v-for="(flagName, i) in flagNames"
-                    :key="i"
-                  >
-                    <input
-                      type="checkbox"
-                      class="custom-control-input"
-                      :id="`${flagName}-flag`"
-                      @input="switchFlag($event, flagName)"
-                    />
-                    <label class="custom-control-label" :for="`${flagName}-flag`">{{
-                      `${flagName}-flag`
-                    }}</label>
+                <div class="card-body d-flex justify-content-center">
+                  <div>
+                    <div
+                      class="custom-control custom-switch"
+                      v-for="(flagName, i) in flagNames"
+                      :key="i"
+                    >
+                      <input
+                        type="checkbox"
+                        class="custom-control-input"
+                        :id="`${flagName}-flag`"
+                        @input="switchFlag($event, flagName)"
+                      />
+                      <label class="custom-control-label" :for="`${flagName}-flag`">
+                        {{ `${flagName}-flag` }}
+                      </label>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -86,18 +103,18 @@ export default {
       pattern: "",
       flagNames: ["g", "i", "m", "u", "s", "y"],
       flags: {
-        g: "",
-        i: "",
-        m: "",
-        u: "",
-        s: "",
-        y: ""
+        g: '',
+        i: '',
+        m: '',
+        u: '',
+        s: '',
+        y: ''
       },
       result: undefined
     };
   },
   methods: {
-    showResult() {
+    textMatch() {
       this.result = this.text.match(this.regexp);
     },
     switchFlag(e, val) {
@@ -109,13 +126,14 @@ export default {
     text() {
       return this.$store.getters.text;
     },
-    regexp() {
+    regexp() {      
       const flags = `${this.flags.g}${this.flags.i}${this.flags.m}${this.flags.u}${this.flags.s}${this.flags.y}`;
       return new RegExp(this.pattern, flags);
     }
   },
   mounted() {
-    this.$refs['regexp-result'].style.height = this.$refs['regexp-result'].getBoundingClientRect().height + 'px';
+    this.$refs["regexp-result"].style.height =
+      this.$refs["regexp-result"].getBoundingClientRect().height + "px";
   },
   components: {
     componentText
@@ -126,12 +144,14 @@ export default {
 <style>
 .custom-control-input,
 .custom-control-label {
+  white-space: nowrap;
   user-select: none;
   cursor: pointer;
+  transition: text-shadow 300ms;
 }
 .custom-control-input:hover,
 .custom-control-label:hover {
-  font-weight: 600;
+  text-shadow: 0 0 1px black;
 }
 
 .regexp {
