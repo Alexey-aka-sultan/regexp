@@ -10,6 +10,18 @@
       <!-- menu -->
       <section class="pt-5 pb-5">
         <div class="container">
+          <div id="symbol-classes" class="row pb-2">
+            <div
+              class="symbol-classes__item d-flex justify-content-center align-items-center bg-secondary text-white m-1 rounded-circle"
+              v-for="(item, i) in symbolClasses"
+              :key="i"
+              @click="appendSymbolClass(item.name)"
+              :title="item.desc"
+              data-toggle="tooltip"
+            >
+              {{ item.name }}
+            </div>
+          </div>
           <!-- menu-header -->
           <div class="row justify-content-end pb-4">
             <!-- regexp -->
@@ -18,7 +30,13 @@
             </div>
             <!-- pattern -->
             <div class="input-group col-6">
-              <input type="text" class="form-control" v-model="pattern" placeholder="type your pattern" />
+              <input
+                ref="search-input"
+                type="search"
+                class="form-control"
+                v-model="pattern"
+                placeholder="type your pattern"
+              />
               <div class="input-group-append">
                 <button class="input-group-text" @click="textMatch">Search</button>
               </div>
@@ -40,7 +58,11 @@
                 <h6 class="card-header text-center">Replace</h6>
 
                 <div class="card-body d-flex flex-column align-items-center justify-content-between">
-                  <input type="text" class="form-control mb-1" v-model="replaceTo" placeholder="replace to" />
+                  <label style="height: 1em">
+                    <code>{{ replaceTo }}</code>
+                  </label>
+                  <input type="text" class="form-control" v-model="replaceTo" placeholder="replace to" maxlength="12" />
+                  <i class=" text-muted">$&amp; $` $' $$</i>
                   <button class="btn btn-secondary" @click="textReplace">Replace</button>
                 </div>
               </div>
@@ -51,7 +73,7 @@
               <div class="card h-100">
                 <h6 class="card-header text-center">Select flags</h6>
                 <!--  -->
-                <div class="card-body d-flex justify-content-center">
+                <div class="card-body d-flex justify-content-center align-items-center">
                   <div>
                     <div class="custom-control custom-switch" v-for="(item, i) in flags" :key="i">
                       <input
@@ -91,6 +113,15 @@ export default {
     return {
       pattern: "",
       flags: { g: "", i: "", m: "", u: "", s: "", y: "" },
+      symbolClasses: [
+        { name: "\\d", desc: "цифры" },
+        { name: "\\D", desc: "не цифры" },
+        { name: "\\s", desc: "пробельные символы, табы, новые строки" },
+        { name: "\\S", desc: "все, кроме \\s" },
+        { name: "\\w", desc: "латиница, цифры, подчёркивание '_'" },
+        { name: "\\W", desc: "все, кроме \\w" },
+        { name: ".", desc: "любой символ, кроме перевода строки \\n. или любой символ если с флагом s" }
+      ],
       replaceTo: "",
       result: undefined
     };
@@ -107,6 +138,12 @@ export default {
     },
     clearResult() {
       this.result = "";
+    },
+    appendSymbolClass(val) {
+      const selectionStart = this.$refs["search-input"].selectionStart;
+      let arr = this.pattern.split("");
+      arr.splice(selectionStart, 0, val);
+      this.pattern = arr.join("");
     }
   },
   computed: {
@@ -115,11 +152,18 @@ export default {
     },
     regexp() {
       const flags = `${this.flags.g}${this.flags.i}${this.flags.m}${this.flags.u}${this.flags.s}${this.flags.y}`;
-      return new RegExp(this.pattern, flags);
+      try {
+        return new RegExp(this.pattern, flags);
+      } catch (error) {}
     }
   },
   mounted() {
+    //
     this.$refs["regexp-result"].style.height = this.$refs["regexp-result"].getBoundingClientRect().height + "px";
+    //
+    $(function() {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
   },
   components: {
     componentText
@@ -140,16 +184,24 @@ export default {
   text-shadow: 0 0 1px black;
 }
 
+#symbol-classes .symbol-classes__item {
+  font-size: 16px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
 .regexp {
   font-size: 1rem;
 }
 .regexp-result {
   overflow-y: auto;
+  overflow-wrap: break-word;
 }
 
 .fa-times-circle {
-  right: 10px;
-  top: 10px;
+  right: 7px;
+  top: 7px;
   font-size: 22px;
   opacity: 0.5;
   cursor: pointer;
