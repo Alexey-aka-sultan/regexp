@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <!-- header -->
-    <header class="jumbotron container">
+    <header class="jumbotron shadow-sm border container">
       <h1 class="display-3 text-center">Регулярные выражения</h1>
     </header>
 
@@ -46,15 +46,15 @@
           <!-- menu-body -->
           <div class="row">
             <!-- result -->
-            <div class="col-8 d-flex">
-              <div ref="regexp-result" class="regexp-result border shadow-sm w-100 p-3 position-relative">
-                {{ result }}
+            <div class="col-8 d-flex position-relative">
                 <i class="far fa-times-circle position-absolute" @click="clearResult"></i>
+              <div ref="regexp-result" class="regexp-result border shadow-sm w-100 p-3 ">
+                {{ result }}
               </div>
             </div>
             <!-- replace -->
             <div class="col-2 form-group mb-0">
-              <div class="card h-100">
+              <div class="card shadow-sm h-100">
                 <h6 class="card-header text-center">Replace</h6>
 
                 <div class="card-body d-flex flex-column align-items-center justify-content-between">
@@ -70,7 +70,7 @@
 
             <!-- flags -->
             <div class="col-2 form-group mb-0">
-              <div class="card h-100">
+              <div class="card shadow-sm h-100">
                 <h6 class="card-header text-center">Select flags</h6>
                 <!--  -->
                 <div class="card-body d-flex justify-content-center align-items-center">
@@ -120,7 +120,9 @@ export default {
         { name: "\\S", desc: "все, кроме \\s" },
         { name: "\\w", desc: "латиница, цифры, подчёркивание '_'" },
         { name: "\\W", desc: "все, кроме \\w" },
-        { name: ".", desc: "любой символ, кроме перевода строки \\n. или любой символ если с флагом s" }
+        { name: ".", desc: "любой символ, кроме перевода строки \\n. или любой символ если с флагом s" },
+        { name: "^", desc: "совпадение с началом текста" },
+        { name: "$", desc: "совпадение с концом текста" }
       ],
       replaceTo: "",
       result: undefined
@@ -129,6 +131,7 @@ export default {
   methods: {
     textMatch() {
       this.result = this.text.match(this.regexp);
+      console.log(this.regexp.test(this.text));
     },
     textReplace() {
       this.result = this.text.replace(this.regexp, this.replaceTo);
@@ -148,7 +151,7 @@ export default {
   },
   computed: {
     text() {
-      return this.$store.getters.text;
+      return this.$store.getters.text.trim();
     },
     regexp() {
       const flags = `${this.flags.g}${this.flags.i}${this.flags.m}${this.flags.u}${this.flags.s}${this.flags.y}`;
@@ -188,7 +191,14 @@ export default {
   font-size: 16px;
   width: 32px;
   height: 32px;
+  box-shadow: 0 3px 3px black;
+
   cursor: pointer;
+  transition: transform 300ms;
+}
+
+#symbol-classes .symbol-classes__item:hover {
+  transform: translateY(-3px);
 }
 
 .regexp {
@@ -200,8 +210,8 @@ export default {
 }
 
 .fa-times-circle {
-  right: 7px;
-  top: 7px;
+  right: 35px;
+  top: 10px;
   font-size: 22px;
   opacity: 0.5;
   cursor: pointer;
