@@ -63,7 +63,7 @@
                   </label>
                   <input type="text" class="form-control" v-model="replaceTo" placeholder="replace to" maxlength="12" />
                   <i class=" text-muted">$&amp; $` $' $$</i>
-                  <button class="btn btn-secondary" @click="textReplace">Replace</button>
+                  <button class="btn btn-secondary border shadow-sm" @click="textReplace">Replace</button>
                 </div>
               </div>
             </div>
@@ -114,12 +114,14 @@ export default {
       pattern: "",
       flags: { g: "", i: "", m: "", u: "", s: "", y: "" },
       symbolClasses: [
+        { name: "\\", desc: "экранирование" },
         { name: "\\d", desc: "цифры" },
         { name: "\\D", desc: "не цифры" },
         { name: "\\s", desc: "пробельные символы, табы, новые строки" },
         { name: "\\S", desc: "все, кроме \\s" },
         { name: "\\w", desc: "латиница, цифры, подчёркивание '_'" },
         { name: "\\W", desc: "все, кроме \\w" },
+        { name: "\\b", desc: "граница слова" },
         { name: ".", desc: "любой символ, кроме перевода строки \\n. или любой символ если с флагом s" },
         { name: "^", desc: "совпадение с началом текста" },
         { name: "$", desc: "совпадение с концом текста" }
@@ -131,7 +133,6 @@ export default {
   methods: {
     textMatch() {
       this.result = this.text.match(this.regexp);
-      console.log(this.regexp.test(this.text));
     },
     textReplace() {
       this.result = this.text.replace(this.regexp, this.replaceTo);
