@@ -48,7 +48,7 @@
             <!-- result -->
             <div class="col-8 d-flex position-relative">
                 <i class="far fa-times-circle position-absolute" @click="clearResult"></i>
-              <div ref="regexp-result" class="regexp-result border shadow-sm w-100 p-3 ">
+              <div ref="regexp-result" class="regexp-result border shadow-sm w-100 pt-4 p-3 ">
                 {{ result }}
               </div>
             </div>
@@ -124,7 +124,10 @@ export default {
         { name: "\\b", desc: "граница слова" },
         { name: ".", desc: "любой символ, кроме перевода строки \\n. или любой символ если с флагом s" },
         { name: "^", desc: "совпадение с началом текста" },
-        { name: "$", desc: "совпадение с концом текста" }
+        { name: "$", desc: "совпадение с концом текста" },
+        { name: "[]", desc: "диапазон значений" },
+        { name: "{}", desc: "квантификатор" },
+        { name: "()", desc: "скобосная группа" }
       ],
       replaceTo: "",
       result: undefined
@@ -206,13 +209,13 @@ export default {
   font-size: 1rem;
 }
 .regexp-result {
-  overflow-y: auto;
+  overflow-y: scroll;
   overflow-wrap: break-word;
 }
 
 .fa-times-circle {
   right: 35px;
-  top: 10px;
+  top: 5px;
   font-size: 22px;
   opacity: 0.5;
   cursor: pointer;
