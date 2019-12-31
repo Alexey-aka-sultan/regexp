@@ -25,11 +25,11 @@
           <!-- menu-header -->
           <div class="row justify-content-end pb-4">
             <!-- regexp -->
-            <div class="col-6 d-flex align-items-center">
+            <div class="col-12 col-sm-6 d-flex align-items-center">
               <code class="regexp border-bottom border-top w-100 pt-1 pb-1">{{ regexp }}</code>
             </div>
             <!-- pattern -->
-            <div class="input-group col-6">
+            <div class="input-group col-12 col-sm-6">
               <input
                 ref="search-input"
                 type="search"
@@ -46,14 +46,14 @@
           <!-- menu-body -->
           <div class="row">
             <!-- result -->
-            <div class="col-8 d-flex position-relative">
+            <div class="col-12 col-lg-8 d-flex position-relative mb-2 mb-lg-0">
                 <i class="far fa-times-circle position-absolute" @click="clearResult"></i>
               <div ref="regexp-result" class="regexp-result border shadow-sm w-100 pt-4 p-3 ">
                 {{ result }}
               </div>
             </div>
             <!-- replace -->
-            <div class="col-2 form-group mb-0">
+            <div class="col-6 col-lg-2 form-group mb-0">
               <div class="card shadow-sm h-100">
                 <h6 class="card-header text-center">Replace</h6>
 
@@ -69,7 +69,7 @@
             </div>
 
             <!-- flags -->
-            <div class="col-2 form-group mb-0">
+            <div class="col-6 col-lg-2 form-group mb-0">
               <div class="card shadow-sm h-100">
                 <h6 class="card-header text-center">Select flags</h6>
                 <!--  -->
@@ -179,6 +179,12 @@ export default {
 </script>
 
 <style>
+header {
+  background-image: url('./assets/images/js.png');
+  background-repeat: no-repeat;
+  background-position: top center;
+}
+
 .custom-control-input,
 .custom-control-label {
   white-space: nowrap;
@@ -209,6 +215,7 @@ export default {
   font-size: 1rem;
 }
 .regexp-result {
+  min-height: 200px;
   overflow-y: scroll;
   overflow-wrap: break-word;
 }
@@ -224,5 +231,12 @@ export default {
 .fa-times-circle:hover {
   transform: scale(1.1);
   opacity: 1;
+}
+
+@media (max-width: 576px) {
+  h1.display-3 {
+    padding-top: 50px;
+    font-size: 2.5rem;
+  }
 }
 </style>
