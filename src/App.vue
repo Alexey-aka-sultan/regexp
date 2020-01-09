@@ -1,8 +1,9 @@
 <template>
   <div id="app">
     <!-- header -->
-    <header class="jumbotron shadow-sm border container">
+    <header class="jumbotron shadow-sm border container position-relative">
       <h1 class="display-3 text-center">Регулярные выражения</h1>
+      <a href="http://alexey-web.ru" class="author position-absolute">Алексей Байжанов</a>
     </header>
 
     <!-- main -->
@@ -179,10 +180,10 @@ export default {
 </script>
 
 <style>
-header {
-  background-image: url('./assets/images/js.png');
-  background-repeat: no-repeat;
-  background-position: top center;
+.author {
+  left: 5px;
+  top: 5px;
+  color: gray;
 }
 
 .custom-control-input,
